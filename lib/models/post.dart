@@ -1,3 +1,5 @@
+import 'dart:developer';
+
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/foundation.dart';
 
@@ -8,7 +10,7 @@ class Post {
   String userId;
   String userName;
   String userAvatar;
-  String timestamp;
+  DateTime timestamp;
   String? postCaption;
   String imageUrl;
 
@@ -28,7 +30,7 @@ class Post {
     String postId = "";
     String userName = "";
     String userAvatar = "";
-    String timestamp = "";
+    DateTime timestamp = DateTime.now();
     String postCaption = "";
 
     try {
@@ -38,10 +40,13 @@ class Post {
       postId = snapshot.get(FirestoreConstants.postId).toString();
       userName = snapshot.get(FirestoreConstants.userName);
       userAvatar = snapshot.get(FirestoreConstants.userAvatar);
-      timestamp = snapshot.get(FirestoreConstants.timestamp).toString();
+      timestamp =
+          (snapshot.get(FirestoreConstants.timestamp) as Timestamp)
+              .toDate();
     } catch (e) {
       if (kDebugMode) {
-        print(e);
+        log(e.toString());
+        // print(e);
       }
     }
     return Post(

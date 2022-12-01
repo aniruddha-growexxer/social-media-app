@@ -1,8 +1,11 @@
+import 'dart:developer';
+
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:mobx/mobx.dart';
 import 'package:provider/provider.dart';
 import 'package:social_media_app/constants/constants.dart';
+import 'package:social_media_app/models/user.dart';
 import 'package:social_media_app/screens/add_new_user.dart';
 import 'package:social_media_app/screens/otp.dart';
 import 'package:social_media_app/shared_preferences.dart';
@@ -31,13 +34,14 @@ abstract class LoginStoreBase with Store {
   GlobalKey<ScaffoldState> otpScaffoldKey = GlobalKey<ScaffoldState>();
 
   @observable
-  late User firebaseUser;
+  User? firebaseUser;
 
   @action
   Future<bool> isAlreadyAuthenticated() async {
     firebaseUser = await _auth.currentUser!;
     if (firebaseUser != null) {
-      GlobalConstants.userId = firebaseUser.uid;
+      GlobalConstants.userId = firebaseUser!.uid;
+      log("already authenticated");
       return true;
     } else {
       return false;
@@ -53,7 +57,7 @@ abstract class LoginStoreBase with Store {
         phoneNumber: phoneNumber,
         timeout: const Duration(seconds: 60),
         verificationCompleted: (PhoneAuthCredential auth) async {
-          await firebaseUser.updatePhoneNumber(auth);
+          await firebaseUser!.updatePhoneNumber(auth);
           await _auth.signInWithCredential(auth).then((UserCredential value) {
             if (value != null && value.user != null) {
               print('Authentication successful');
@@ -65,6 +69,7 @@ abstract class LoginStoreBase with Store {
             buildShowSnackBar(
                 context, 'Something has gone wrong, please try later');
           });
+          isLoginLoading = false;
         },
         verificationFailed: (FirebaseAuthException authException) {
           print('Error message: ' + authException.message.toString());
@@ -104,16 +109,22 @@ abstract class LoginStoreBase with Store {
   Future<void> onAuthenticationSuccessful(
       BuildContext context, UserCredential result) async {
     UserStore userStore;
-    userStore = Provider.of<UserStore>(context);
+    userStore = Provider.of<UserStore>(context, listen: false);
     isLoginLoading = true;
     isOtpLoading = true;
 
     firebaseUser = result.user!;
-    userStore.setUser(firebaseUser);
     setUserId(result.user!.uid);
     setPhoneNumber(result.user!.phoneNumber);
     GlobalConstants.userId = result.user!.uid;
-
+    GlobalConstants.phoneNumber = result.user!.phoneNumber!;
+    await userStore.createUserObject(
+      SocialMediaUser(
+          userId: GlobalConstants.userId,
+          phoneNumber: GlobalConstants.phoneNumber,
+          userName: "",
+          imageUrl: GlobalConstants.userAvatar),
+    );
     await Navigator.of(context).pushAndRemoveUntil(
         MaterialPageRoute(builder: (_) => AddNewUser()),
         (Route<dynamic> route) => false);

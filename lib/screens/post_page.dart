@@ -1,4 +1,6 @@
 import 'package:flutter/material.dart';
+import 'package:intl/intl.dart';
+import 'package:social_media_app/widgets/profile_image_avatar.dart';
 
 import '../constants/colors.dart';
 import '../models/comment.dart';
@@ -107,22 +109,15 @@ class _PostPageState extends State<PostPage> {
                                   ),
                                   child: CircleAvatar(
                                     foregroundColor: COLORS.secondaryColor,
-                                    child: Text(
-                                      'Sample post',
-                                      textAlign: TextAlign.center,
-                                      style: TextStyle(
-                                          fontSize: 12,
-                                          fontWeight: FontWeight.w500),
-                                    ),
-                                    // child: ClipOval(
-                                    //   child: Image(
-                                    //     height: 50.0,
-                                    //     width: 50.0,
-                                    //     image:
-                                    //         AssetImage(widget.post.userAvatar),
-                                    //     fit: BoxFit.cover,
-                                    //   ),
+                                    // child: Text(
+                                    //   'Sample post',
+                                    //   textAlign: TextAlign.center,
+                                    //   style: TextStyle(
+                                    //       fontSize: 12,
+                                    //       fontWeight: FontWeight.w500),
                                     // ),
+                                    child: profileImageAvatar(
+                                        imageUrl: widget.post.userAvatar),
                                   ),
                                 ),
                                 title: Text(
@@ -131,7 +126,10 @@ class _PostPageState extends State<PostPage> {
                                     fontWeight: FontWeight.bold,
                                   ),
                                 ),
-                                subtitle: Text(widget.post.timestamp),
+                                subtitle: Text(
+                                  DateFormat('MM/dd/yyyy, hh:mm a')
+                                      .format(widget.post.timestamp),
+                                ),
                                 trailing: IconButton(
                                   icon: Icon(Icons.more_horiz),
                                   color: Colors.black,
@@ -157,10 +155,19 @@ class _PostPageState extends State<PostPage> {
                                   blurRadius: 5.0,
                                 ),
                               ],
-                              // image: DecorationImage(
-                              //   image: AssetImage(widget.post.imageUrl),
-                              //   fit: BoxFit.fitWidth,
-                              // ),
+                            ),
+                            child: Image.network(
+                              widget.post.imageUrl,
+                              loadingBuilder:
+                                  (context, child, loadingProgress) {
+                                if (loadingProgress == null) return child;
+                                return CircularProgressIndicator(
+                                  value: loadingProgress.cumulativeBytesLoaded /
+                                      loadingProgress.expectedTotalBytes!
+                                          .toInt(),
+                                  strokeWidth: 4,
+                                );
+                              },
                             ),
                           ),
                         ),

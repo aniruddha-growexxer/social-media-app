@@ -4,6 +4,7 @@ import 'dart:async';
 import 'dart:developer';
 
 import 'package:flutter/material.dart';
+import 'package:social_media_app/constants/constants.dart';
 import 'package:social_media_app/screens/add_new_user.dart';
 import 'package:social_media_app/shared_preferences.dart';
 
@@ -25,15 +26,19 @@ class _SplashScreenState extends State<SplashScreen> {
     Timer(const Duration(seconds: 3), () async {
       String userId = await getId();
       String userName = await getuserName();
+
       log(userId);
       log(userName);
       if (userId != "" && userName != "") {
+        GlobalConstants.userId = userId;
+        GlobalConstants.userName = userName;
         Navigator.pushAndRemoveUntil(
           context,
           MaterialPageRoute(builder: ((context) => MainPage())),
           (route) => false,
         );
       } else if (userId != "" && userName == "") {
+        GlobalConstants.userId = userId;
         Navigator.pushAndRemoveUntil(
           context,
           MaterialPageRoute(builder: ((context) => AddNewUser())),

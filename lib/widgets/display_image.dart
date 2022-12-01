@@ -5,45 +5,63 @@ import 'package:social_media_app/constants/colors.dart';
 
 class DisplayImage extends StatelessWidget {
   final String imagePath;
+  final bool isLoading;
   final VoidCallback onPressed;
 
   // Constructor
   const DisplayImage({
     Key? key,
+    required this.isLoading,
     required this.imagePath,
     required this.onPressed,
   }) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
-    final color = COLORS.secondaryColor;
+    final color = COLORS.secondaryColorLight;
 
     return Center(
-        child: Stack(children: [
-      buildImage(color),
-      Positioned(
-        child: GestureDetector(
-          child: buildEditIcon(color),
-          onTap: onPressed,
-        ),
-        right: 4,
-        top: 10,
-      )
-    ]));
+        child: isLoading
+            ? CircularProgressIndicator()
+            : Stack(children: [
+                buildImage(color),
+                Positioned(
+                  child: GestureDetector(
+                    child: buildEditIcon(color),
+                    onTap: onPressed,
+                  ),
+                  right: 4,
+                  top: 10,
+                )
+              ]));
   }
 
   // Builds Profile Image
   Widget buildImage(Color color) {
-    final image = imagePath.contains('https://')
-        ? NetworkImage(imagePath)
-        : FileImage(File(imagePath));
-
     return CircleAvatar(
       radius: 75,
       backgroundColor: color,
-      child: CircleAvatar(
-        backgroundImage: image as ImageProvider,
-        radius: 70,
+      child: Container(
+        clipBehavior: Clip.hardEdge,
+        decoration: BoxDecoration(
+          shape: BoxShape.circle,
+        ),
+        child: Image.network(
+          imagePath,
+          loadingBuilder: (context, child, loadingProgress) {
+            if (loadingProgress == null) {
+              return child;
+            }
+            return CircularProgressIndicator(
+              value: loadingProgress.expectedTotalBytes != null
+                  ? loadingProgress.cumulativeBytesLoaded /
+                      loadingProgress.expectedTotalBytes!
+                  : null,
+              strokeWidth: 4,
+              color: COLORS.secondaryColor,
+            );
+          },
+        ),
       ),
     );
   }

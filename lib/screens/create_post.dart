@@ -7,6 +7,7 @@ import 'package:flutter_mobx/flutter_mobx.dart';
 import 'package:provider/provider.dart';
 import 'package:social_media_app/screens/homepage.dart';
 import 'package:social_media_app/stores/post_store.dart';
+import 'package:social_media_app/stores/user_store.dart';
 
 import '../widgets/loader.dart';
 
@@ -20,6 +21,14 @@ class CreatePost extends StatefulWidget {
 
 class _CreatePostState extends State<CreatePost> {
   TextEditingController textEditingController = TextEditingController();
+  late UserStore userStore;
+
+  @override
+  void didChangeDependencies() {
+    // TODO: implement didChangeDependencies
+    super.didChangeDependencies();
+    userStore = Provider.of<UserStore>(context);
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -52,6 +61,7 @@ class _CreatePostState extends State<CreatePost> {
                         ),
                         onTap: () {
                           postStore.addNewPost(
+                              socialMediaUser: userStore.user!,
                               context: context,
                               filePath: widget.croppedFilePath,
                               caption: textEditingController.text);

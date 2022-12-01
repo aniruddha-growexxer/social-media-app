@@ -6,6 +6,8 @@ import 'package:firebase_storage/firebase_storage.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:mobx/mobx.dart';
+import 'package:social_media_app/models/user.dart';
+import 'package:social_media_app/screens/main_page.dart';
 import 'package:uuid/uuid.dart';
 
 import '../constants/constants.dart';
@@ -32,6 +34,7 @@ abstract class _PostStoreBase with Store {
 
   void addNewPost(
       {required BuildContext context,
+      required SocialMediaUser socialMediaUser,
       required String filePath,
       required String caption}) {
     isPostUploading = true;
@@ -46,9 +49,9 @@ abstract class _PostStoreBase with Store {
           FirebaseFirestore.instance.collection('posts').doc(postId).set({
             FirestoreConstants.postId: postId,
             FirestoreConstants.timestamp: DateTime.now(),
-            FirestoreConstants.userAvatar: GlobalConstants.userAvatar,
-            FirestoreConstants.userId: GlobalConstants.userId,
-            FirestoreConstants.userName: GlobalConstants.userName,
+            FirestoreConstants.userAvatar: socialMediaUser.imageUrl,
+            FirestoreConstants.userId: socialMediaUser.userId,
+            FirestoreConstants.userName: socialMediaUser.userName,
             FirestoreConstants.postCaption: caption,
             FirestoreConstants.imageUrl: url,
           });
@@ -56,7 +59,7 @@ abstract class _PostStoreBase with Store {
           isPostUploading = false;
           posts.clear();
           Navigator.pushAndRemoveUntil(context,
-              MaterialPageRoute(builder: (c) => HomePage()), (route) => false);
+              MaterialPageRoute(builder: (c) => MainPage()), (route) => false);
         });
       }).onError((error, stackTrace) {
         log(error.toString());
@@ -73,23 +76,18 @@ abstract class _PostStoreBase with Store {
     isPostLoading = true;
     posts.clear();
     await fetchAllPosts(context).asBroadcastStream().first.then((e) {
-      log("e is ${e.docs.length}");
-      e.docs.forEach((element) {
+      for (var element in e.docs) {
         posts.add(Post.fromDocument(element));
-      });
+      }
     });
-    log("posts length is ${posts.length}");
 
     isPostLoading = false;
-    log('=========');
   }
 
   loadPostsByUserId(BuildContext context, String userId) async {
-    log("post loading");
     isPostLoading = true;
     postsOfSingleUser.clear();
     await fetchAllPosts(context).asBroadcastStream().first.then((e) {
-      log("e is ${e.docs.length}");
       for (var element in e.docs) {
         Post post = Post.fromDocument(element);
         if (post.userId == userId) {
@@ -97,9 +95,7 @@ abstract class _PostStoreBase with Store {
         }
       }
     });
-    log("postsOfSingleUser length is ${postsOfSingleUser.length}");
     isPostLoading = false;
-    log('=========');
   }
 
   Stream<QuerySnapshot<Map<String, dynamic>>> fetchAllPosts(

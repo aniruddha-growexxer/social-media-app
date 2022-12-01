@@ -1,14 +1,15 @@
-import 'dart:async';
-import 'package:async/async.dart';
-import 'package:cloud_firestore/cloud_firestore.dart';
+import 'dart:developer';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
-import 'package:shared_preferences/shared_preferences.dart';
-import 'package:social_media_app/constants/colors.dart';
 import 'package:social_media_app/constants/constants.dart';
+import 'package:social_media_app/models/user.dart';
+import 'package:social_media_app/screens/edit_profile.dart';
+import 'package:social_media_app/screens/login.dart';
+import 'package:social_media_app/shared_preferences.dart';
 
 import '../stores/post_store.dart';
+import '../stores/user_store.dart';
 
 class ProfileScreen extends StatefulWidget {
   // ProfileScreen();
@@ -18,27 +19,19 @@ class ProfileScreen extends StatefulWidget {
 }
 
 class _ProfileScreenState extends State<ProfileScreen> {
-  late User _user;
-  Color _gridColor = Colors.blue;
-  Color _listColor = Colors.grey;
-  bool _isGridActive = true;
-  bool _isLiked = false;
+  late SocialMediaUser user;
   late PostStore postStore;
+  late UserStore userStore;
 
   @override
-  void didChangeDependencies() {
+  void didChangeDependencies() async {
     super.didChangeDependencies();
     postStore = Provider.of<PostStore>(context);
-    postStore.loadPostsByUserId(context, GlobalConstants.userId);
+    userStore = Provider.of<UserStore>(context);
+    await userStore.setUser(GlobalConstants.userId);
+    await postStore.loadPostsByUserId(context, GlobalConstants.userId);
+    setState(() {});
   }
-
-  @override
-  void initState() {
-    super.initState();
-    retrieveUserDetails();
-  }
-
-  retrieveUserDetails() async {}
 
   @override
   Widget build(BuildContext context) {
@@ -47,15 +40,23 @@ class _ProfileScreenState extends State<ProfileScreen> {
         appBar: AppBar(
           elevation: 1,
           backgroundColor: Colors.white,
-          title: Text(
+          title: const Text(
             'Profile',
             style: TextStyle(color: Colors.black),
           ),
           actions: <Widget>[
             IconButton(
-              icon: Icon(Icons.settings_power),
-              color: Colors.black,
-              onPressed: () {},
+              icon: const Icon(Icons.settings_power),
+              color: Color.fromRGBO(0, 0, 0, 1),
+              onPressed: () async {
+                FirebaseAuth _auth = FirebaseAuth.instance;
+                await _auth.signOut();
+                clearData();
+                Navigator.pushAndRemoveUntil(
+                    context,
+                    MaterialPageRoute(builder: (c) => const Login()),
+                    (route) => false);
+              },
             )
           ],
         ),
@@ -69,16 +70,18 @@ class _ProfileScreenState extends State<ProfileScreen> {
                     padding: const EdgeInsets.only(top: 20.0, left: 20.0),
                     child: Container(
                         width: 110.0,
-                        child: Text("Profile Image"),
                         height: 110.0,
-                        decoration: BoxDecoration(
-                          borderRadius: BorderRadius.circular(80.0),
-                          // image: DecorationImage(
-                          //     image: _user.photoUrl.isEmpty
-                          //         ? AssetImage('assets/no_image.png')
-                          //         : NetworkImage(_user.photoUrl),
-                          //     fit: BoxFit.cover),
-                        )),
+                        decoration: const BoxDecoration(
+                          shape: BoxShape.circle,
+                        ),
+                        clipBehavior: Clip.hardEdge,
+                        child: userStore.isSettingUser
+                            ? Center(
+                                child: CircularProgressIndicator(),
+                              )
+                            : Image.network(userStore.user!.imageUrl!.isEmpty
+                                ? GlobalConstants.userAvatar
+                                : userStore.user!.imageUrl.toString())),
                   ),
                   Padding(
                     padding: const EdgeInsets.only(top: 8.0),
@@ -89,11 +92,21 @@ class _ProfileScreenState extends State<ProfileScreen> {
                           children: <Widget>[
                             Padding(
                               padding: const EdgeInsets.only(left: 24.0),
-                              child: detailsWidget('110', 'followers'),
+                              child: detailsWidget(
+                                  postStore.postsOfSingleUser.length.toString(),
+                                  'Posts'),
+                            ),
+                            Padding(
+                              padding: const EdgeInsets.only(left: 24.0),
+                              child: detailsWidget(
+                                  userStore.user!.followers!.length.toString(),
+                                  'Followers'),
                             ),
                             Padding(
                               padding: const EdgeInsets.only(left: 20.0),
-                              child: detailsWidget('10', 'following'),
+                              child: detailsWidget(
+                                  userStore.user!.following!.length.toString(),
+                                  'Following'),
                             ),
                           ],
                         ),
@@ -108,13 +121,20 @@ class _ProfileScreenState extends State<ProfileScreen> {
                                   color: Colors.white,
                                   borderRadius: BorderRadius.circular(4.0),
                                   border: Border.all(color: Colors.grey)),
-                              child: Center(
+                              child: const Center(
                                 child: Text('Edit Profile',
                                     style: TextStyle(color: Colors.black)),
                               ),
                             ),
                           ),
-                          onTap: () {},
+                          onTap: () {
+                            Navigator.push(
+                              context,
+                              MaterialPageRoute(
+                                builder: (c) => EditProfilePage(),
+                              ),
+                            );
+                          },
                         )
                       ],
                     ),
@@ -123,27 +143,31 @@ class _ProfileScreenState extends State<ProfileScreen> {
               ),
               Padding(
                 padding: const EdgeInsets.only(left: 25.0, top: 30.0),
-                child: Text("displayName",
-                    style: TextStyle(
-                        color: Colors.black,
-                        fontWeight: FontWeight.bold,
-                        fontSize: 20.0)),
+                child: userStore.isSettingUser
+                    ? const SizedBox(
+                        width: 30,
+                        child: LinearProgressIndicator(),
+                      )
+                    : Text(
+                        userStore.user!.userName,
+                        style: const TextStyle(
+                          color: Colors.black,
+                          fontWeight: FontWeight.bold,
+                          fontSize: 20.0,
+                        ),
+                      ),
               ),
-              Padding(
-                padding: const EdgeInsets.only(left: 25.0, top: 10.0),
-                child: Text("Bio"),
-              ),
-              Padding(
-                padding: const EdgeInsets.only(top: 12.0),
+              const Padding(
+                padding: EdgeInsets.only(top: 12.0),
                 child: Divider(),
               ),
               Padding(
                 padding: const EdgeInsets.only(top: 4.0),
                 child: GridView.builder(
-                  physics: NeverScrollableScrollPhysics(),
+                  physics: const NeverScrollableScrollPhysics(),
                   shrinkWrap: true,
-                  itemCount: postStore.posts.length,
-                  gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
+                  itemCount: postStore.postsOfSingleUser.length,
+                  gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
                       crossAxisCount: 3,
                       crossAxisSpacing: 4.0,
                       mainAxisSpacing: 4.0),
@@ -262,14 +286,14 @@ class _ProfileScreenState extends State<ProfileScreen> {
     return Column(
       children: <Widget>[
         Text(count,
-            style: TextStyle(
+            style: const TextStyle(
                 fontWeight: FontWeight.bold,
                 fontSize: 18.0,
                 color: Colors.black)),
         Padding(
           padding: const EdgeInsets.only(top: 4.0),
-          child:
-              Text(label, style: TextStyle(fontSize: 16.0, color: Colors.grey)),
+          child: Text(label,
+              style: const TextStyle(fontSize: 16.0, color: Colors.grey)),
         )
       ],
     );

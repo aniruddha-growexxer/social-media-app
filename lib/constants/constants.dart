@@ -1,7 +1,12 @@
 class GlobalConstants {
   static String userId = "";
+  static String phoneNumber = "";
   static String userName = "";
-  static String userAvatar = "";  
+
+  static String userAvatar =
+      "https://upload.wikimedia.org/wikipedia/commons/thumb/7/7c/User_font_awesome.svg/1024px-User_font_awesome.svg.png";
+  static String staticAvatar =
+      "https://upload.wikimedia.org/wikipedia/commons/thumb/7/7c/User_font_awesome.svg/1024px-User_font_awesome.svg.png";
 }
 
 class Strings {
@@ -9,6 +14,7 @@ class Strings {
 }
 
 class FirestoreConstants {
+  static String phoneNumber = "phoneNumber";
   static String postId = 'postId';
   static String userId = 'userId';
   static String timestamp = 'timestamp';
@@ -16,5 +22,6 @@ class FirestoreConstants {
   static String postCaption = 'postCaption';
   static String imageUrl = 'imageUrl';
   static String userAvatar = "userAvatar";
-
+  static String followers = 'followers';
+  static String following = 'following';
 }

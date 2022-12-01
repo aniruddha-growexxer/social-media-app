@@ -77,13 +77,13 @@ mixin _$LoginStore on LoginStoreBase, Store {
       Atom(name: 'LoginStoreBase.firebaseUser', context: context);
 
   @override
-  User get firebaseUser {
+  User? get firebaseUser {
     _$firebaseUserAtom.reportRead();
     return super.firebaseUser;
   }
 
   @override
-  set firebaseUser(User value) {
+  set firebaseUser(User? value) {
     _$firebaseUserAtom.reportWrite(value, super.firebaseUser, () {
       super.firebaseUser = value;
     });
