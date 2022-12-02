@@ -141,7 +141,11 @@ class _HomePageState extends State<HomePage> {
                   )
                 ]),
           ),
-          body: bodyMainList(postStore: postStore, context: context),
+          body: bodyMainList(
+            postStore: postStore,
+            context: context,
+            userStore: userStore,
+          ),
           // bottomNavigationBar: mainFooterPage(),
         ),
       );
@@ -151,17 +155,27 @@ class _HomePageState extends State<HomePage> {
   }
 }
 
-Widget bodyMainList(
-    {required PostStore postStore, required BuildContext context}) {
+Widget bodyMainList({
+  required PostStore postStore,
+  required BuildContext context,
+  required UserStore userStore,
+}) {
   return Column(
-    children: <Widget>[            
+    children: <Widget>[
       Expanded(
         // height: 900,
         child: ListView.builder(
             shrinkWrap: true,
             itemCount: postStore.posts.length,
             itemBuilder: (context, i) {
-              return _post(context, postStore.posts[i]);
+              if (userStore.user!.following!
+                      .contains(postStore.posts[i].userId) ||
+                  postStore.posts[i].userId == userStore.user!.userId) {
+                return _post(context, postStore.posts[i]);
+              } else if (userStore.user!.following!.isEmpty) {
+                return _post(context, postStore.posts[i]);
+              }
+              return Container();
             }),
       ),
     ],
@@ -227,7 +241,7 @@ Widget _post(BuildContext context, Post post) {
     padding: const EdgeInsets.symmetric(horizontal: 0.0, vertical: 0.0),
     child: Container(
       width: double.infinity,
-      height: 560.0,
+      // height: 560.0,
       decoration: BoxDecoration(
         color: Colors.white,
         borderRadius: BorderRadius.circular(0.0),
@@ -235,8 +249,9 @@ Widget _post(BuildContext context, Post post) {
       child: Column(
         children: <Widget>[
           Padding(
-            padding: const EdgeInsets.symmetric(vertical: 0.0),
+            padding: const EdgeInsets.symmetric(vertical: 0.0, horizontal: 10),
             child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
               children: <Widget>[
                 ListTile(
                   leading: Container(
@@ -265,15 +280,25 @@ Widget _post(BuildContext context, Post post) {
                       ),
                     ),
                   ),
-                  title: Text(
-                    post.postCaption!,
-                    style: const TextStyle(
-                      fontWeight: FontWeight.bold,
-                      color: Colors.black,
-                    ),
+                  title: Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      Text(
+                        post.userName,
+                        style: const TextStyle(
+                          fontWeight: FontWeight.bold,
+                          color: Colors.black,
+                        ),
+                      ),
+                    ],
                   ),
                   subtitle: Text(
                     DateFormat('MM/dd/yyyy, hh:mm a').format(post.timestamp),
+                    style: const TextStyle(
+                      fontWeight: FontWeight.w400,
+                      fontSize: 12,
+                      color: Colors.black,
+                    ),
                   ),
                   trailing: IconButton(
                     icon: const Icon(Icons.more_horiz),
@@ -298,12 +323,12 @@ Widget _post(BuildContext context, Post post) {
                     width: 400,
                     height: 400.0,
                     decoration: BoxDecoration(
-                      // color: Colors.white,
-                      borderRadius: BorderRadius.circular(0.0),
+                      color: Colors.white,
+                      borderRadius: BorderRadius.circular(18),
                       boxShadow: [
                         BoxShadow(
                           color: Colors.grey.shade200,
-                          offset: const Offset(0, 0.5),
+                          offset: const Offset(0, 2),
                           blurRadius: 8.0,
                         ),
                       ],
@@ -361,6 +386,14 @@ Widget _post(BuildContext context, Post post) {
                         onPressed: () => print('ok saved'),
                       ),
                     ],
+                  ),
+                ),
+                Text(
+                  post.postCaption!,
+                  style: const TextStyle(
+                    fontWeight: FontWeight.w500,
+                    // fontSize: 14,
+                    color: Colors.black,
                   ),
                 ),
               ],

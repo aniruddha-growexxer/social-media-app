@@ -71,6 +71,13 @@ abstract class _PostStoreBase with Store {
     }
   }
 
+  updatePost(String field, String value, String postId) async {
+    await FirebaseFirestore.instance
+        .collection('posts')
+        .doc(postId)
+        .update({field: value});
+  }
+
   loadPosts(BuildContext context) async {
     log("post loading");
     isPostLoading = true;

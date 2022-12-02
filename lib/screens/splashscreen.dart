@@ -37,13 +37,6 @@ class _SplashScreenState extends State<SplashScreen> {
           MaterialPageRoute(builder: ((context) => MainPage())),
           (route) => false,
         );
-      } else if (userId != "" && userName == "") {
-        GlobalConstants.userId = userId;
-        Navigator.pushAndRemoveUntil(
-          context,
-          MaterialPageRoute(builder: ((context) => AddNewUser())),
-          (route) => false,
-        );
       } else {
         Navigator.pushAndRemoveUntil(
           context,

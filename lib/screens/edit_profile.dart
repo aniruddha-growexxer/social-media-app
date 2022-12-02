@@ -46,16 +46,26 @@ class _EditProfilePageState extends State<EditProfilePage> {
               backgroundColor: COLORS.secondaryColor,
               elevation: 0,
               // toolbarHeight: 10,
-              automaticallyImplyLeading: true,
-              title: Center(
-                child: Container(
-                  child: Text(
-                    'Add your Profile',
-                    style: TextStyle(
-                      fontSize: 30,
-                      fontWeight: FontWeight.w700,
-                      color: COLORS.primaryColor,
-                    ),
+              automaticallyImplyLeading: false,
+              leading: GestureDetector(
+                child: Icon(Icons.arrow_back),
+                onTap: () {
+                  Navigator.pop(context);
+                  Navigator.pop(context);
+                  Navigator.push(context, MaterialPageRoute(builder: (c) {
+                    return MainPage(
+                      currentTabIndex: 2,
+                    );
+                  }));
+                },
+              ),
+              centerTitle: true,
+              title: Container(
+                child: Text(
+                  'Edit your Profile',
+                  style: TextStyle(
+                    fontSize: 20,
+                    color: Colors.white,
                   ),
                 ),
               ),
@@ -145,15 +155,9 @@ class _EditProfilePageState extends State<EditProfilePage> {
                               context: context,
                               field: FirestoreConstants.userName,
                               value: userNameController.text);
-                          if (success) {
-                            buildShowSnackBar(
-                                context, "Details saved successfully");
-                          } else {
+                          if (!success) {
                             buildShowSnackBar(context, "Something went wrong");
                           }
-                        } else {
-                          buildShowSnackBar(
-                              context, "Please enter valid details");
                         }
                       },
                       color: COLORS.secondaryColor,

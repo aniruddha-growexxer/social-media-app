@@ -7,6 +7,7 @@ import 'package:provider/provider.dart';
 import 'package:social_media_app/constants/constants.dart';
 import 'package:social_media_app/models/user.dart';
 import 'package:social_media_app/screens/add_new_user.dart';
+import 'package:social_media_app/screens/main_page.dart';
 import 'package:social_media_app/screens/otp.dart';
 import 'package:social_media_app/shared_preferences.dart';
 import 'package:social_media_app/stores/user_store.dart';
@@ -114,23 +115,29 @@ abstract class LoginStoreBase with Store {
     isOtpLoading = true;
 
     firebaseUser = result.user!;
+    await userStore.setUser(result.user!.uid);
     setUserId(result.user!.uid);
     setPhoneNumber(result.user!.phoneNumber);
     GlobalConstants.userId = result.user!.uid;
     GlobalConstants.phoneNumber = result.user!.phoneNumber!;
-    await userStore.createUserObject(
-      SocialMediaUser(
-          userId: GlobalConstants.userId,
-          phoneNumber: GlobalConstants.phoneNumber,
-          userName: "",
-          imageUrl: GlobalConstants.userAvatar),
-    );
-    await Navigator.of(context).pushAndRemoveUntil(
-        MaterialPageRoute(builder: (_) => AddNewUser()),
-        (Route<dynamic> route) => false);
-
     isLoginLoading = false;
     isOtpLoading = false;
+    if (userStore.user!.userId != "" && userStore.user!.userName == "") {
+      await userStore.createUserObject(
+        SocialMediaUser(
+            userId: GlobalConstants.userId,
+            phoneNumber: GlobalConstants.phoneNumber,
+            userName: "",
+            imageUrl: GlobalConstants.userAvatar),
+      );
+      await Navigator.of(context).pushAndRemoveUntil(
+          MaterialPageRoute(builder: (_) => AddNewUser()),
+          (Route<dynamic> route) => false);
+    } else {
+      await Navigator.of(context).pushAndRemoveUntil(
+          MaterialPageRoute(builder: (_) => MainPage()),
+          (Route<dynamic> route) => false);
+    }
   }
 
   @action
@@ -139,5 +146,7 @@ abstract class LoginStoreBase with Store {
     await Navigator.of(context).pushAndRemoveUntil(
         MaterialPageRoute(builder: (_) => const Login()),
         (Route<dynamic> route) => false);
+    isLoginLoading = false;
+    isOtpLoading = false;
   }
 }

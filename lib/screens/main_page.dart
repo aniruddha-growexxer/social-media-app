@@ -7,7 +7,8 @@ import 'package:social_media_app/screens/homepage.dart';
 import 'package:social_media_app/screens/profile_page.dart';
 
 class MainPage extends StatefulWidget {
-  const MainPage({Key? key}) : super(key: key);
+  final int? currentTabIndex;
+  const MainPage({Key? key, this.currentTabIndex}) : super(key: key);
 
   @override
   State<MainPage> createState() => _MainPageState();
@@ -20,6 +21,7 @@ class _MainPageState extends State<MainPage> with TickerProviderStateMixin {
   @override
   void initState() {
     super.initState();
+    _currentTabIndex = widget.currentTabIndex!;
     tabController = TabController(length: 3, vsync: this);
     tabController.addListener(() {
       // print("${tabController.index}");
@@ -49,7 +51,7 @@ class _MainPageState extends State<MainPage> with TickerProviderStateMixin {
           child: BottomNavigationBar(
             currentIndex: _currentTabIndex,
             selectedItemColor: COLORS.secondaryColor,
-            unselectedItemColor: COLORS.secondaryColorLight,            
+            unselectedItemColor: COLORS.secondaryColorLight,
             onTap: (index) {
               setState(() {
                 _currentTabIndex = index;
@@ -57,7 +59,7 @@ class _MainPageState extends State<MainPage> with TickerProviderStateMixin {
             },
             type: BottomNavigationBarType.fixed,
             items: const [
-              BottomNavigationBarItem(                        
+              BottomNavigationBarItem(
                 icon: Icon(
                   Icons.home,
                   size: 30.0,

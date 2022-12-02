@@ -12,6 +12,7 @@ import 'package:social_media_app/models/user.dart';
 import 'package:social_media_app/utils.dart';
 
 import '../models/post.dart';
+import 'post_store.dart';
 part 'user_store.g.dart';
 
 class UserStore = _UserStoreBase with _$UserStore;
@@ -110,7 +111,23 @@ abstract class _UserStoreBase with Store {
     await FirebaseFirestore.instance
         .collection('users')
         .doc(GlobalConstants.userId)
-        .update({field: value}).whenComplete(() {
+        .update({field: value}).whenComplete(() async {
+      await PostStore()
+          .fetchAllPosts(context)
+          .asBroadcastStream()
+          .first
+          .then((e) async {
+        for (var element in e.docs) {
+          Post post = Post.fromDocument(element);
+          if (post.userId == GlobalConstants.userId) {
+            if (field == FirestoreConstants.imageUrl) {
+              await PostStore().updatePost("userAvatar", value, post.postId);
+            } else {
+              await PostStore().updatePost(field, value, post.postId);
+            }
+          }
+        }
+      });
       buildShowSnackBar(context, "Details updated successfully");
     }).onError((error, stackTrace) {
       buildShowSnackBar(context, "Details could not be saved");
