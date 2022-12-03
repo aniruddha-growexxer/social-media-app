@@ -9,6 +9,7 @@
 .history
 .svn/
 migrate_working_dir/
+coverage/
 
 # IntelliJ related
 *.iml
@@ -45,3 +46,5 @@ app.*.map.json
 /android/app/debug
 /android/app/profile
 /android/app/release
+.scannerwork/.sonar_lock
+.scannerwork/report-task.txt

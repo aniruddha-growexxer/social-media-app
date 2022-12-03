@@ -24,7 +24,6 @@ class _LoginState extends State<Login> {
         builder: (context) => LoaderHUD(
           inAsyncCall: loginStore.isLoginLoading,
           child: Scaffold(
-            key: loginStore.loginScaffoldKey,
             backgroundColor: Color.fromARGB(255, 237, 236, 236),
             body: SafeArea(
               child: SingleChildScrollView(

@@ -41,38 +41,6 @@ mixin _$LoginStore on LoginStoreBase, Store {
     });
   }
 
-  late final _$loginScaffoldKeyAtom =
-      Atom(name: 'LoginStoreBase.loginScaffoldKey', context: context);
-
-  @override
-  GlobalKey<ScaffoldState> get loginScaffoldKey {
-    _$loginScaffoldKeyAtom.reportRead();
-    return super.loginScaffoldKey;
-  }
-
-  @override
-  set loginScaffoldKey(GlobalKey<ScaffoldState> value) {
-    _$loginScaffoldKeyAtom.reportWrite(value, super.loginScaffoldKey, () {
-      super.loginScaffoldKey = value;
-    });
-  }
-
-  late final _$otpScaffoldKeyAtom =
-      Atom(name: 'LoginStoreBase.otpScaffoldKey', context: context);
-
-  @override
-  GlobalKey<ScaffoldState> get otpScaffoldKey {
-    _$otpScaffoldKeyAtom.reportRead();
-    return super.otpScaffoldKey;
-  }
-
-  @override
-  set otpScaffoldKey(GlobalKey<ScaffoldState> value) {
-    _$otpScaffoldKeyAtom.reportWrite(value, super.otpScaffoldKey, () {
-      super.otpScaffoldKey = value;
-    });
-  }
-
   late final _$firebaseUserAtom =
       Atom(name: 'LoginStoreBase.firebaseUser', context: context);
 
@@ -130,8 +98,6 @@ mixin _$LoginStore on LoginStoreBase, Store {
     return '''
 isLoginLoading: ${isLoginLoading},
 isOtpLoading: ${isOtpLoading},
-loginScaffoldKey: ${loginScaffoldKey},
-otpScaffoldKey: ${otpScaffoldKey},
 firebaseUser: ${firebaseUser}
     ''';
   }

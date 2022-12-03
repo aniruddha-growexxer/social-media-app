@@ -54,7 +54,6 @@ class _OtpScreenState extends State<OtpScreen> {
           builder: (context) => LoaderHUD(
                 inAsyncCall: loginStore.isLoginLoading,
                 child: Scaffold(
-                  key: loginStore.otpScaffoldKey,
                   backgroundColor: Colors.white,
                   appBar: AppBar(
                     leading: IconButton(

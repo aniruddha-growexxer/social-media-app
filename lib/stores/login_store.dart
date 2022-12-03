@@ -3,6 +3,7 @@ import 'dart:developer';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:mobx/mobx.dart';
+import 'package:mockito/annotations.dart';
 import 'package:provider/provider.dart';
 import 'package:social_media_app/constants/constants.dart';
 import 'package:social_media_app/models/user.dart';
@@ -26,13 +27,9 @@ abstract class LoginStoreBase with Store {
 
   @observable
   bool isLoginLoading = false;
+  
   @observable
   bool isOtpLoading = false;
-
-  @observable
-  GlobalKey<ScaffoldState> loginScaffoldKey = GlobalKey<ScaffoldState>();
-  @observable
-  GlobalKey<ScaffoldState> otpScaffoldKey = GlobalKey<ScaffoldState>();
 
   @observable
   User? firebaseUser;

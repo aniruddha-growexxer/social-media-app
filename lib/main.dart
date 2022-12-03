@@ -5,8 +5,6 @@ import 'package:social_media_app/screens/splashscreen.dart';
 import 'package:social_media_app/stores/login_store.dart';
 import 'package:social_media_app/stores/post_store.dart';
 import 'package:social_media_app/stores/user_store.dart';
-
-import 'constants/colors.dart';
 import 'firebase_options.dart';
 
 void main() async {
