@@ -1,0 +1,37 @@
+{"protocolVersion":"0.1.1","runnerVersion":null,"pid":9736,"type":"start","time":0}
+{"suite":{"id":0,"platform":"vm","path":"/Users/growlt097/Desktop/flutter_projects/social-media-app/test/home_screen_test.dart"},"type":"suite","time":0}
+{"test":{"id":1,"name":"loading /Users/growlt097/Desktop/flutter_projects/social-media-app/test/home_screen_test.dart","suiteID":0,"groupIDs":[],"metadata":{"skip":false,"skipReason":null},"line":null,"column":null,"url":null},"type":"testStart","time":1}
+{"suite":{"id":2,"platform":"vm","path":"/Users/growlt097/Desktop/flutter_projects/social-media-app/test/profile_screen_test.dart"},"type":"suite","time":6}
+{"test":{"id":3,"name":"loading /Users/growlt097/Desktop/flutter_projects/social-media-app/test/profile_screen_test.dart","suiteID":2,"groupIDs":[],"metadata":{"skip":false,"skipReason":null},"line":null,"column":null,"url":null},"type":"testStart","time":6}
+{"suite":{"id":4,"platform":"vm","path":"/Users/growlt097/Desktop/flutter_projects/social-media-app/test/login_screen_test.dart"},"type":"suite","time":7}
+{"test":{"id":5,"name":"loading /Users/growlt097/Desktop/flutter_projects/social-media-app/test/login_screen_test.dart","suiteID":4,"groupIDs":[],"metadata":{"skip":false,"skipReason":null},"line":null,"column":null,"url":null},"type":"testStart","time":7}
+{"count":3,"time":8,"type":"allSuites"}
+
+[{"event":"test.startedProcess","params":{"observatoryUri":"http://127.0.0.1:62508/HRAcDuP5A_o=/"}}]
+
+[{"event":"test.startedProcess","params":{"observatoryUri":"http://127.0.0.1:62512/HHqnQ9nRWwc=/"}}]
+
+[{"event":"test.startedProcess","params":{"observatoryUri":"http://127.0.0.1:62514/pUTtJh5lfqQ=/"}}]
+{"testID":1,"result":"success","skipped":false,"hidden":true,"type":"testDone","time":2560}
+{"group":{"id":6,"suiteID":0,"parentID":null,"name":"","metadata":{"skip":false,"skipReason":null},"testCount":1,"line":null,"column":null,"url":null},"type":"group","time":2562}
+{"test":{"id":7,"name":"HomePage test","suiteID":0,"groupIDs":[6],"metadata":{"skip":false,"skipReason":null},"line":154,"column":5,"url":"package:flutter_test/src/widget_tester.dart","root_line":37,"root_column":3,"root_url":"file:///Users/growlt097/Desktop/flutter_projects/social-media-app/test/home_screen_test.dart"},"type":"testStart","time":2563}
+{"testID":3,"result":"success","skipped":false,"hidden":true,"type":"testDone","time":2764}
+{"group":{"id":8,"suiteID":2,"parentID":null,"name":"","metadata":{"skip":false,"skipReason":null},"testCount":1,"line":null,"column":null,"url":null},"type":"group","time":2765}
+{"test":{"id":9,"name":"(setUpAll)","suiteID":2,"groupIDs":[8],"metadata":{"skip":false,"skipReason":null},"line":50,"column":3,"url":"file:///Users/growlt097/Desktop/flutter_projects/social-media-app/test/profile_screen_test.dart"},"type":"testStart","time":2765}
+{"testID":9,"result":"success","skipped":false,"hidden":true,"type":"testDone","time":2784}
+{"test":{"id":10,"name":"ProfileScreen test when user is already set","suiteID":2,"groupIDs":[8],"metadata":{"skip":false,"skipReason":null},"line":154,"column":5,"url":"package:flutter_test/src/widget_tester.dart","root_line":61,"root_column":3,"root_url":"file:///Users/growlt097/Desktop/flutter_projects/social-media-app/test/profile_screen_test.dart"},"type":"testStart","time":2784}
+{"testID":5,"result":"success","skipped":false,"hidden":true,"type":"testDone","time":2866}
+{"group":{"id":11,"suiteID":4,"parentID":null,"name":"","metadata":{"skip":false,"skipReason":null},"testCount":2,"line":null,"column":null,"url":null},"type":"group","time":2866}
+{"test":{"id":12,"name":"LoginScreen test","suiteID":4,"groupIDs":[11],"metadata":{"skip":false,"skipReason":null},"line":154,"column":5,"url":"package:flutter_test/src/widget_tester.dart","root_line":41,"root_column":3,"root_url":"file:///Users/growlt097/Desktop/flutter_projects/social-media-app/test/login_screen_test.dart"},"type":"testStart","time":2866}
+{"testID":7,"messageType":"print","message":"No observables detected in the build method of Observer\nObserver constructed from: _HomePageState.build (package:social_media_app/screens/homepage.dart:55:12)","type":"print","time":3351}
+{"testID":10,"messageType":"print","message":"No observables detected in the build method of Observer\nObserver constructed from: _ProfileScreenState.build (package:social_media_app/screens/profile_page.dart:40:12)","type":"print","time":3586}
+{"testID":7,"result":"success","skipped":false,"hidden":false,"type":"testDone","time":3654}
+{"testID":12,"messageType":"print","message":"No observables detected in the build method of Observer\nObserver constructed from: _LoginState.build.<anonymous closure> (package:social_media_app/screens/login.dart:23:14)","type":"print","time":3664}
+{"testID":10,"result":"success","skipped":false,"hidden":false,"type":"testDone","time":3932}
+{"test":{"id":13,"name":"(tearDownAll)","suiteID":2,"groupIDs":[8],"metadata":{"skip":false,"skipReason":null},"line":null,"column":null,"url":null},"type":"testStart","time":3932}
+{"testID":13,"result":"success","skipped":false,"hidden":true,"type":"testDone","time":3947}
+{"testID":12,"result":"success","skipped":false,"hidden":false,"type":"testDone","time":4051}
+{"test":{"id":14,"name":"OtpScreen test","suiteID":4,"groupIDs":[11],"metadata":{"skip":false,"skipReason":null},"line":154,"column":5,"url":"package:flutter_test/src/widget_tester.dart","root_line":57,"root_column":3,"root_url":"file:///Users/growlt097/Desktop/flutter_projects/social-media-app/test/login_screen_test.dart"},"type":"testStart","time":4051}
+{"testID":14,"messageType":"print","message":"No observables detected in the build method of Observer\nObserver constructed from: _OtpScreenState.build.<anonymous closure> (package:social_media_app/screens/otp.dart:53:14)","type":"print","time":4098}
+{"testID":14,"result":"success","skipped":false,"hidden":false,"type":"testDone","time":4182}
+{"success":true,"type":"done","time":4728}
